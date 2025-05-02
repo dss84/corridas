@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários das Principais Corridas</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a365d;
+            --secondary-blue: #3b82f6;
+            --accent-blue: #2563eb;
+            --day-color-friday: #dbeafe;
+            --day-color-saturday: #eeecd4;
+            --day-color-sunday: #bfe0d0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            color: var(--primary-blue);
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .filter-section {
+            background-color: #e0f0ff;
+            padding: 1rem;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .category-badge {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        .time-badge {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.2rem;
+        }
+
+        /* Cores alternadas por dia */
+        .day-friday { background-color: var(--day-color-friday); }
+        .day-saturday { background-color: var(--day-color-saturday); }
+        .day-sunday { background-color: var(--day-color-sunday); }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .table-container {
+                padding: 0.5rem;
+            }
+            
+            .filter-section .row > div {
+                margin-bottom: 0.5rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .category-badge, .time-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.4rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .footer {
+            background-color: var(--primary-blue);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <h1>Horários das Principais Corridas: TN, Stock Light, Stock Pro e F1</h1>
+        <p>2 a 4 de Maio de 2025</p>
+    </header>
+
+    <!-- Filtro por categoria -->
+    <div class="filter-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-3">
+                    <label for="categoryFilter" class="form-label fw-bold mb-0">Filtrar por Categoria:</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <select class="form-select" id="categoryFilter">
+                        <option value="all">Todas</option>
+                        <option value="Stock Light">Stock Light</option>
+                        <option value="TN">TN</option>
+                        <option value="Stock Car Pro">Stock Car Pro</option>
+                        <option value="Fórmula 1">Fórmula 1</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo principal com tabela -->
+    <main class="container my-4">
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Dia</th>
+                            <th>Data</th>
+                            <th>Categoria</th>
+                            <th>Evento</th>
+                            <th>Horário</th>
+                            <th>Local</th>
+                        </tr>
+                    </thead>
+                    <tbody id="raceTableBody">
+                        <!-- Dados serão inseridos aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Dados extraídos do PDF
+        const races = [
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Shakedown", time: "07:30", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "TN", event: "Treino Livre 2", time: "09:15", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Treino Livre 2", time: "09:55", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "TN", event: "Treino Livre 3", time: "11:20", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Shakedown", time: "11:50", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Treino Livre 3", time: "12:35", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Treino Livre 1", time: "13:10", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Fórmula 1", event: "Treino Livre 1", time: "13:30", location: "Miami" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Classificação", time: "14:45", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Treino Livre 2", time: "15:05", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "TN", event: "Classificação", time: "16:10", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Treino Livre 3", time: "17:00", location: "Interlagos" },
+            { day: "Sexta-feira", date: "02/05/2025", category: "Fórmula 1", event: "Qualy Sprint", time: "17:30", location: "Miami" },
+            { day: "Sábado", date: "03/05/2025", category: "Stock Car Pro", event: "Treino Livre 4", time: "09:20", location: "Interlagos" },
+            { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 1", time: "10:15", location: "Interlagos" },
+            { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 2", time: "10:45", location: "Interlagos" },
+            { day: "Sábado", date: "03/05/2025", category: "Fórmula 1", event: "Corrida Sprint", time: "13:00", location: "Miami" },
+            { day: "Sábado", date: "03/05/2025", category: "Stock Car Pro", event: "Treino Livre 5", time: "11:35", location: "Interlagos" },
+            { day: "Sábado", date: "03/05/2025", category: "Stock Car Pro", event: "Classificação", time: "14:45", location: "Interlagos" },
+            { day: "Sábado", date: "03/05/2025", category: "Stock Light", event: "Corrida 1", time: "16:05", location: "Interlagos" },
+            { day: "Sábado", date: "03/05/2025", category: "Fórmula 1", event: "Classificação", time: "17:00", location: "Miami" },
+            { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 3", time: "17:10", location: "Interlagos" },
+            { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 4", time: "17:40", location: "Interlagos" },
+            { day: "Domingo", date: "04/05/2025", category: "TN", event: "Corrida 5", time: "08:20", location: "Interlagos" },
+            { day: "Domingo", date: "04/05/2025", category: "Stock Car Pro", event: "Corrida", time: "12:10", location: "Interlagos" },
+            { day: "Domingo", date: "04/05/2025", category: "Stock Light", event: "Corrida 2", time: "13:45", location: "Interlagos" },
+            { day: "Domingo", date: "04/05/2025", category: "Stock Light", event: "Corrida 3", time: "14:20", location: "Interlagos" },
+            { day: "Domingo", date: "04/05/2025", category: "TN", event: "Corrida 6", time: "15:35", location: "Interlagos" },
+            { day: "Domingo", date: "04/05/2025", category: "Fórmula 1", event: "Corrida", time: "17:00", location: "Miami" }
+        ];
+
+        // Função para criar linhas da tabela
+        function createRaceRows(filterCategory = "all") {
+            const tbody = document.getElementById("raceTableBody");
+            tbody.innerHTML = "";
+            
+            const filteredRaces = filterCategory === "all" ? races : races.filter(race => race.category === filterCategory);
+            
+            filteredRaces.forEach(race => {
+                const tr = document.createElement("tr");
+                
+                // Adicionar classe com base no dia
+                switch(race.day) {
+                    case "Sexta-feira":
+                        tr.className = "day-friday";
+                        break;
+                    case "Sábado":
+                        tr.className = "day-saturday";
+                        break;
+                    case "Domingo":
+                        tr.className = "day-sunday";
+                        break;
+                }
+                
+                tr.innerHTML = `
+                    <td>${race.day}</td>
+                    <td>${race.date}</td>
+                    <td><span class="category-badge">${race.category}</span></td>
+                    <td>${race.event}</td>
+                    <td><span class="time-badge">${race.time}</span></td>
+                    <td>${race.location}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Inicializar tabela
+        document.addEventListener("DOMContentLoaded", () => {
+            createRaceRows();
+            
+            // Event listener para filtro
+            document.getElementById("categoryFilter").addEventListener("change", (e) => {
+                createRaceRows(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>
