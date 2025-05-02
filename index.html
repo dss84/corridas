@@ -118,6 +118,32 @@
         font-size: 0.85rem;
         padding: 0.5rem;
       }
+      
+      /* Garantir que a animação funcione em dispositivos móveis */
+      .current-event {
+        position: relative;
+        overflow: visible !important;
+      }
+      
+      .current-event::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border: 2px solid var(--accent-green);
+        pointer-events: none;
+        animation: pulse-border 2s infinite;
+        border-radius: 4px;
+        z-index: 0;
+      }
+      
+      /* Garantir que a tabela não corte a animação */
+      .table-responsive {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+      }
     }
 
     .footer {
@@ -218,7 +244,7 @@
     const tbody = document.getElementById("raceTableBody");
     tbody.innerHTML = "";
 
-    // Obtém a data e hora atual
+    // Usa a data atual do sistema
     const now = new Date();
 
     let filteredRaces = filterCategory === "all" ? [...races] : races.filter(race => race.category === filterCategory);
