@@ -16,21 +16,18 @@
       --day-color-saturday: #fef9c3;
       --day-color-sunday: #fee2e2;
     }
-
     body {
       font-family: 'Roboto', sans-serif;
       background-color: #f0f4f8;
       color: var(--primary-blue);
       line-height: 1.6;
     }
-
     .header {
       background-color: var(--primary-blue);
       color: white;
       padding: 2rem 1rem;
       text-align: center;
     }
-
     .table-container {
       background-color: white;
       border-radius: 0.5rem;
@@ -38,12 +35,11 @@
       margin-top: 2rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-
     .table {
-      border-collapse: separate;
-      border-spacing: 0;
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 0;
     }
-
     .category-badge {
       font-size: 0.75rem;
       padding: 0.3rem 0.6rem;
@@ -51,101 +47,72 @@
       background-color: #2563eb;
       color: white;
     }
-
     .time-badge {
       background-color: var(--primary-blue);
       color: white;
       padding: 0.2rem 0.5rem;
       border-radius: 0.2rem;
     }
-
-    /* Animação de pulsação ao redor da linha inteira */
     @keyframes pulse-border {
-      0% {
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      }
-      50% {
-        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.3);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      }
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.3); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
     }
-
-    /* Linha atual com borda pulsante ao redor */
     .current-event {
       position: relative;
       z-index: 1;
     }
-
     .current-event td {
       position: relative;
     }
-
     .current-event::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
       border: 2px solid var(--accent-green);
       pointer-events: none;
       animation: pulse-border 2s infinite;
       border-radius: 4px;
       z-index: -1;
     }
-
-    /* Cores alternadas por dia */
     .day-friday { background-color: var(--day-color-friday); }
     .day-saturday { background-color: var(--day-color-saturday); }
     .day-sunday { background-color: var(--day-color-sunday); }
-
-    /* Estados de eventos */
     .past-event {
       background-color: #4b5563 !important;
       color: #e5e7eb !important;
     }
-
     .past-event .category-badge,
     .past-event .time-badge {
       opacity: 0.7;
     }
-
-    /* Responsividade */
     @media (max-width: 768px) {
       .table th, .table td {
-        font-size: 0.85rem;
-        padding: 0.5rem;
+        font-size: 0.8rem;
+        padding: 0.4rem;
+        white-space: normal;
+        word-wrap: break-word;
       }
-      
-      /* Garantir que a animação funcione em dispositivos móveis */
-      .current-event {
-        position: relative;
-        overflow: visible !important;
-      }
-      
       .current-event::after {
-        content: '';
-        position: absolute;
+        z-index: 0;
         top: -2px;
         left: -2px;
         right: -2px;
         bottom: -2px;
-        border: 2px solid var(--accent-green);
-        pointer-events: none;
-        animation: pulse-border 2s infinite;
         border-radius: 4px;
-        z-index: 0;
       }
-      
-      /* Garantir que a tabela não corte a animação */
       .table-responsive {
-        overflow-x: visible !important;
-        overflow-y: visible !important;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+      .table-responsive > .table {
+        border: 1px solid rgba(0,0,0,0.1);
+        margin-bottom: 0;
       }
     }
-
     .footer {
       background-color: var(--primary-blue);
       color: white;
@@ -156,17 +123,13 @@
   </style>
 </head>
 <body>
-
-<!-- Cabeçalho -->
 <header class="header">
   <h1>Horários das Principais Corridas do Fim de Semana</h1>
   <p>2 a 4 de Maio de 2025</p>
 </header>
-
-<!-- Filtro por categoria -->
 <div class="container my-3">
   <div class="row align-items-center">
-    <div class="col-12 col-md-3">
+    <div class="col-12 col-md-3 mb-2 mb-md-0">
       <label for="categoryFilter" class="form-label fw-bold">Filtrar por Categoria:</label>
     </div>
     <div class="col-12 col-md-9">
@@ -180,8 +143,6 @@
     </div>
   </div>
 </div>
-
-<!-- Tabela -->
 <main class="container my-4">
   <div class="table-responsive">
     <table class="table table-hover align-middle mb-0" id="raceTable">
@@ -195,18 +156,13 @@
           <th>Local</th>
         </tr>
       </thead>
-      <tbody id="raceTableBody">
-        <!-- Dados serão inseridos aqui -->
-      </tbody>
+      <tbody id="raceTableBody"></tbody>
     </table>
   </div>
 </main>
-
-<!-- Rodapé -->
 <footer class="footer">
   <p>&copy; 2025 - Diego Sirtoli</p>
 </footer>
-
 <script>
   const races = [
     { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Shakedown", time: "07:30", location: "Interlagos" },
@@ -239,74 +195,59 @@
     { day: "Domingo", date: "04/05/2025", category: "TN", event: "Corrida 6", time: "15:35", location: "Interlagos" },
     { day: "Domingo", date: "04/05/2025", category: "Fórmula 1", event: "Corrida", time: "17:00", location: "Miami" }
   ];
-
+  
   function createRaceRows(filterCategory = "all") {
     const tbody = document.getElementById("raceTableBody");
     tbody.innerHTML = "";
-
-    // Usa a data atual do sistema
     const now = new Date();
-
     let filteredRaces = filterCategory === "all" ? [...races] : races.filter(race => race.category === filterCategory);
-
-    // Ordena os eventos por data e horário
+    
     filteredRaces.sort((a, b) => {
       const dateA = new Date(parseInt(a.date.split('/')[2]), parseInt(a.date.split('/')[1]) - 1, parseInt(a.date.split('/')[0]), parseInt(a.time.split(':')[0]), parseInt(a.time.split(':')[1]));
       const dateB = new Date(parseInt(b.date.split('/')[2]), parseInt(b.date.split('/')[1]) - 1, parseInt(b.date.split('/')[0]), parseInt(b.time.split(':')[0]), parseInt(b.time.split(':')[1]));
       return dateA - dateB;
     });
-
-    // Encontrar o evento atual (o primeiro evento que ainda não terminou)
-    let currentEventIndex = -1;
     
+    let currentEventIndex = -1;
     for (let i = 0; i < filteredRaces.length; i++) {
       const race = filteredRaces[i];
       const [day, month, year] = race.date.split('/');
       const [hours, minutes] = race.time.split(':');
       const eventDateTime = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
       
-      // Se o evento começa depois de agora, ainda não chegamos ao evento atual
       if (eventDateTime > now) {
         break;
       }
       
-      // Se há um próximo evento
       if (i < filteredRaces.length - 1) {
         const nextRace = filteredRaces[i + 1];
         const [nDay, nMonth, nYear] = nextRace.date.split('/');
         const [nHours, nMinutes] = nextRace.time.split(':');
         const nextDateTime = new Date(parseInt(nYear), parseInt(nMonth) - 1, parseInt(nDay), parseInt(nHours), parseInt(nMinutes));
         
-        // Se o próximo evento já começou, este evento já terminou
         if (nextDateTime <= now) {
           continue;
         }
       }
       
-      // Se chegamos aqui, este é o evento atual
       currentEventIndex = i;
       break;
     }
-
-    // Agora criamos as linhas da tabela
+    
     filteredRaces.forEach((race, i) => {
       const tr = document.createElement("tr");
-
       switch(race.day) {
         case "Sexta-feira": tr.className = "day-friday"; break;
         case "Sábado": tr.className = "day-saturday"; break;
         case "Domingo": tr.className = "day-sunday"; break;
       }
-
-      // Marca como evento passado se for anterior ao evento atual
+      
       if (i < currentEventIndex || (currentEventIndex === -1 && i < filteredRaces.length - 1)) {
         tr.classList.add("past-event");
-      } 
-      // Marca como evento atual
-      else if (i === currentEventIndex) {
+      } else if (i === currentEventIndex) {
         tr.classList.add("current-event");
       }
-
+      
       tr.innerHTML = `
         <td>${race.day}</td>
         <td>${race.date}</td>
@@ -315,19 +256,16 @@
         <td><span class="time-badge">${race.time}</span></td>
         <td>${race.location}</td>
       `;
-
       tbody.appendChild(tr);
     });
   }
-
+  
   document.addEventListener("DOMContentLoaded", () => {
     createRaceRows();
-
     document.getElementById("categoryFilter").addEventListener("change", (e) => {
       createRaceRows(e.target.value);
     });
     
-    // Atualiza a tabela a cada minuto para manter o evento atual correto
     setInterval(() => {
       createRaceRows(document.getElementById("categoryFilter").value);
     }, 60000);
