@@ -36,9 +36,9 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .table {
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       width: 100%;
-      margin-bottom: 0;
     }
     .category-badge {
       font-size: 0.75rem;
@@ -53,9 +53,14 @@
       padding: 0.2rem 0.5rem;
       border-radius: 0.2rem;
     }
-    /* Linha atual com fundo verde */
+    /* Nova animação de fundo pulsante */
+    @keyframes pulse-bg {
+      0%, 100% { background-color: #26c45d; }
+      50% { background-color: #017a2e; }
+    }
+    /* Linha atual com fundo pulsante */
     .current-event {
-      background-color: var(--accent-green) !important;
+      animation: pulse-bg 2s infinite;
       color: white !important;
     }
     /* Cores alternadas por dia */
@@ -76,7 +81,6 @@
       .table th, .table td {
         font-size: 0.85rem;
         padding: 0.5rem;
-        white-space: nowrap;
       }
       .table-responsive {
         overflow-x: auto;
@@ -104,7 +108,7 @@
 <!-- Filtro por categoria -->
 <div class="container my-3">
   <div class="row align-items-center">
-    <div class="col-12 col-md-3 mb-2 mb-md-0">
+    <div class="col-12 col-md-3">
       <label for="categoryFilter" class="form-label fw-bold">Filtrar por Categoria:</label>
     </div>
     <div class="col-12 col-md-9">
@@ -132,9 +136,7 @@
           <th>Local</th>
         </tr>
       </thead>
-      <tbody id="raceTableBody">
-        <!-- Dados serão inseridos aqui -->
-      </tbody>
+      <tbody id="raceTableBody"></tbody>
     </table>
   </div>
 </main>
@@ -174,7 +176,7 @@
     { day: "Domingo", date: "04/05/2025", category: "TN", event: "Corrida 6", time: "15:35", location: "Interlagos" },
     { day: "Domingo", date: "04/05/2025", category: "Fórmula 1", event: "Corrida", time: "17:00", location: "Miami" }
   ];
-  
+
   function createRaceRows(filterCategory = "all") {
     const tbody = document.getElementById("raceTableBody");
     tbody.innerHTML = "";
