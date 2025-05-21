@@ -8,7 +8,7 @@
   <style>
     @keyframes pulse {
       0%, 100% { background-color: #dbeafe; }
-      50% { background-color: #519af3; }
+      50% { background-color: #bfdbfe; }
     }
     .animate-pulse {
       animation: pulse 2s infinite;
@@ -17,27 +17,29 @@
 </head>
 <body class="bg-gray-100 font-sans antialiased min-h-screen">
 
-  <div class="container mx-auto p-6">
+  <div class="container mx-auto px-4 py-4 sm:p-6">
 
     <!-- Header -->
-    <header class="bg-white shadow-md p-4 rounded-lg mb-6 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-gray-800">Programação das Corridas</h1>
+    <header class="bg-white shadow-md p-4 rounded-lg mb-6">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">Programação das Corridas</h1>
 
-      <div class="flex gap-4">
-        <select id="filterDay" class="bg-gray-100 border border-gray-300 rounded-md px-2 py-1">
-          <option value="all">Todos os Dias</option>
-          <option value="21">quarta-FEIRA</option>
-          <option value="24">SÁBADO</option>
-          <option value="25">DOMINGO</option>
-        </select>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <select id="filterDay" class="bg-gray-100 border border-gray-300 rounded-md px-2 py-1 mb-2 sm:mb-0">
+            <option value="all">Todos os Dias</option>
+            <option value="23">SEXTA-FEIRA</option>
+            <option value="24">SÁBADO</option>
+            <option value="25">DOMINGO</option>
+          </select>
 
-        <select id="filterCategory" class="bg-gray-100 border border-gray-300 rounded-md px-2 py-1">
-          <option value="all">Todas as Categorias</option>
-          <option value="F1">F1</option>
-          <option value="F3">F3</option>
-          <option value="STOCKCAR">STOCKCAR</option>
-          <option value="INDY500">INDY500</option>
-        </select>
+          <select id="filterCategory" class="bg-gray-100 border border-gray-300 rounded-md px-2 py-1">
+            <option value="all">Todas as Categorias</option>
+            <option value="F1">F1</option>
+            <option value="F3">F3</option>
+            <option value="STOCKCAR">STOCKCAR</option>
+            <option value="INDY500">INDY500</option>
+          </select>
+        </div>
       </div>
     </header>
 
@@ -129,6 +131,7 @@
         dayContainer.appendChild(dayTitle);
 
         const eventsContainer = document.createElement("div");
+        eventsContainer.className = "space-y-4";
 
         const filteredEvents = day.events
           .filter(ev => selectedCategory === "all" || ev.category === selectedCategory);
@@ -146,19 +149,34 @@
 
           const eventCard = document.createElement("div");
           eventCard.className = `
-            bg-white rounded-lg shadow-md p-4 mb-4 flex items-center justify-between
+            bg-white rounded-lg shadow-md p-4
             ${isActive ? "animate-pulse" : ""}
             ${isPast ? "opacity-70" : ""}
             ${isFuture ? "border-l-4 border-blue-500" : ""}
           `;
 
+          // Layout responsivo - vertical para mobile, horizontal para desktop
           eventCard.innerHTML = `
-            <div class="w-1/6 text-center">${event.time}</div>
-            <div class="w-1/6 text-center text-red-500 font-bold">${event.category}</div>
-            <div class="w-2/6">${event.type}</div>
-            <div class="w-1/6 text-center text-gray-600">${event.channel}</div>
-            <div class="w-1/6 text-center italic text-gray-600">${event.location}</div>
-            <div class="w-1/6 text-xs text-gray-500">${statusText}</div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <div class="flex flex-col sm:flex-row sm:items-center mb-2 sm:mb-0">
+                <div class="font-medium text-gray-900 mb-1 sm:mb-0 sm:mr-4">${event.time}</div>
+                <div class="text-red-500 font-bold mb-1 sm:mb-0 sm:mr-4">${event.category}</div>
+              </div>
+              
+              <div class="flex-1 mb-2 sm:mb-0">
+                <div class="font-medium">${event.type}</div>
+              </div>
+              
+              <div class="flex flex-col sm:flex-row sm:items-center text-sm">
+                <div class="text-gray-600 mb-1 sm:mb-0 sm:mr-4">${event.channel}</div>
+                <div class="italic text-gray-600 mb-1 sm:mb-0 sm:mr-4">${event.location}</div>
+                <div class="text-xs px-2 py-1 rounded-full ${
+                  isActive ? "bg-green-100 text-green-800" : 
+                  isFuture ? "bg-blue-100 text-blue-800" : 
+                  "bg-gray-100 text-gray-800"
+                }">${statusText}</div>
+              </div>
+            </div>
           `;
 
           eventsContainer.appendChild(eventCard);
