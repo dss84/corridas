@@ -3,271 +3,186 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Horários das Principais Corridas</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Programação das Corridas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-blue: #1a365d;
-      --accent-green: #10b981;
-      --day-color-friday: #dbeafe;
-      --day-color-saturday: #fef9c3;
-      --day-color-sunday: #fee2e2;
+    @keyframes pulse {
+      0%, 100% { background-color: #dbeafe; }
+      50% { background-color: #519af3; }
     }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f0f4f8;
-      color: var(--primary-blue);
-      line-height: 1.6;
-    }
-    .header {
-      background-color: var(--primary-blue);
-      color: white;
-      padding: 2rem 1rem;
-      text-align: center;
-    }
-    .table-container {
-      background-color: white;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-top: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .table {
-      border-collapse: separate;
-      border-spacing: 0;
-      width: 100%;
-    }
-    .category-badge {
-      font-size: 0.75rem;
-      padding: 0.3rem 0.6rem;
-      border-radius: 0.3rem;
-      background-color: #2563eb;
-      color: white;
-    }
-    .time-badge {
-      background-color: var(--primary-blue);
-      color: white;
-      padding: 0.2rem 0.5rem;
-      border-radius: 0.2rem;
-    }
-    /* Nova animação de fundo pulsante */
-    @keyframes pulse-bg {
-      0%, 100% { background-color: #26c45d; }
-      50% { background-color: #017a2e; }
-    }
-    /* Linha atual com fundo pulsante */
-    .current-event {
-      animation: pulse-bg 2s infinite;
-      color: white !important;
-    }
-    /* Cores alternadas por dia */
-    .day-friday { background-color: var(--day-color-friday); }
-    .day-saturday { background-color: var(--day-color-saturday); }
-    .day-sunday { background-color: var(--day-color-sunday); }
-    /* Estados de eventos */
-    .past-event {
-      background-color: #4b5563 !important;
-      color: #e5e7eb !important;
-    }
-    .past-event .category-badge,
-    .past-event .time-badge {
-      opacity: 0.7;
-    }
-    /* Responsividade */
-    @media (max-width: 768px) {
-      .table th, .table td {
-        font-size: 0.85rem;
-        padding: 0.5rem;
-      }
-      .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      .table {
-        min-width: 600px;
-      }
-    }
-    .footer {
-      background-color: var(--primary-blue);
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
+    .animate-pulse {
+      animation: pulse 2s infinite;
     }
   </style>
 </head>
-<body>
-<!-- Cabeçalho -->
-<header class="header">
-  <h1>Horários das Principais Corridas do Fim de Semana</h1>
-  <p>2 a 4 de Maio de 2025</p>
-</header>
-<!-- Filtro por categoria -->
-<div class="container my-3">
-  <div class="row align-items-center">
-    <div class="col-12 col-md-3">
-      <label for="categoryFilter" class="form-label fw-bold">Filtrar por Categoria:</label>
-    </div>
-    <div class="col-12 col-md-9">
-      <select class="form-select" id="categoryFilter">
-        <option value="all">Todas</option>
-        <option value="Stock Light">Stock Light</option>
-        <option value="TN">TN</option>
-        <option value="Stock Car Pro">Stock Car Pro</option>
-        <option value="Fórmula 1">Fórmula 1</option>
-      </select>
-    </div>
-  </div>
-</div>
-<!-- Tabela -->
-<main class="container my-4">
-  <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0" id="raceTable">
-      <thead class="table-dark">
-        <tr>
-          <th>Dia</th>
-          <th>Data</th>
-          <th>Categoria</th>
-          <th>Evento</th>
-          <th>Horário</th>
-          <th>Local</th>
-        </tr>
-      </thead>
-      <tbody id="raceTableBody"></tbody>
-    </table>
-  </div>
-</main>
-<!-- Rodapé -->
-<footer class="footer">
-  <p>&copy; 2025 - Diego Sirtoli</p>
-</footer>
-<script>
-  const races = [
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Shakedown", time: "07:30", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "TN", event: "Treino Livre 2", time: "09:15", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Treino Livre 2", time: "09:55", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "TN", event: "Treino Livre 3", time: "11:20", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Shakedown", time: "11:50", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Treino Livre 3", time: "12:35", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Treino Livre 1", time: "13:10", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Fórmula 1", event: "Treino Livre 1", time: "13:30", location: "Miami" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Light", event: "Classificação", time: "14:45", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Treino Livre 2", time: "15:05", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "TN", event: "Classificação", time: "16:10", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Stock Car Pro", event: "Treino Livre 3", time: "17:00", location: "Interlagos" },
-    { day: "Sexta-feira", date: "02/05/2025", category: "Fórmula 1", event: "Qualy Sprint", time: "17:30", location: "Miami" },
-    { day: "Sábado", date: "03/05/2025", category: "Stock Car Pro", event: "Treino Livre 4", time: "09:20", location: "Interlagos" },
-    { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 1", time: "10:15", location: "Interlagos" },
-    { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 2", time: "10:45", location: "Interlagos" },
-    { day: "Sábado", date: "03/05/2025", category: "Stock Car Pro", event: "Treino Livre 5", time: "11:35", location: "Interlagos" },
-    { day: "Sábado", date: "03/05/2025", category: "Fórmula 1", event: "Corrida Sprint", time: "13:00", location: "Miami" },
-    { day: "Sábado", date: "03/05/2025", category: "Stock Car Pro", event: "Classificação", time: "14:45", location: "Interlagos" },
-    { day: "Sábado", date: "03/05/2025", category: "Stock Light", event: "Corrida 1", time: "16:05", location: "Interlagos" },
-    { day: "Sábado", date: "03/05/2025", category: "Fórmula 1", event: "Classificação", time: "17:00", location: "Miami" },
-    { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 3", time: "17:10", location: "Interlagos" },
-    { day: "Sábado", date: "03/05/2025", category: "TN", event: "Corrida 4", time: "17:40", location: "Interlagos" },
-    { day: "Domingo", date: "04/05/2025", category: "TN", event: "Corrida 5", time: "08:20", location: "Interlagos" },
-    { day: "Domingo", date: "04/05/2025", category: "Stock Car Pro", event: "Corrida", time: "12:10", location: "Interlagos" },
-    { day: "Domingo", date: "04/05/2025", category: "Stock Light", event: "Corrida 2", time: "13:45", location: "Interlagos" },
-    { day: "Domingo", date: "04/05/2025", category: "Stock Light", event: "Corrida 3", time: "14:20", location: "Interlagos" },
-    { day: "Domingo", date: "04/05/2025", category: "TN", event: "Corrida 6", time: "15:35", location: "Interlagos" },
-    { day: "Domingo", date: "04/05/2025", category: "Fórmula 1", event: "Corrida", time: "17:00", location: "Miami" }
-  ];
+<body class="bg-gray-100 font-sans antialiased min-h-screen">
 
-  function createRaceRows(filterCategory = "all") {
-    const tbody = document.getElementById("raceTableBody");
-    tbody.innerHTML = "";
-    const now = new Date();
-    let filteredRaces = filterCategory === "all" ? [...races] : races.filter(race => race.category === filterCategory);
-    
-    // Ordena os eventos por data e horário
-    filteredRaces.sort((a, b) => {
-      const dateA = new Date(parseInt(a.date.split('/')[2]), parseInt(a.date.split('/')[1]) - 1, parseInt(a.date.split('/')[0]), parseInt(a.time.split(':')[0]), parseInt(a.time.split(':')[1]));
-      const dateB = new Date(parseInt(b.date.split('/')[2]), parseInt(b.date.split('/')[1]) - 1, parseInt(b.date.split('/')[0]), parseInt(b.time.split(':')[0]), parseInt(b.time.split(':')[1]));
-      return dateA - dateB;
-    });
-    
-    // Encontrar o índice do evento atual
-    let currentEventIndex = -1;
-    for (let i = 0; i < filteredRaces.length; i++) {
-      const race = filteredRaces[i];
-      const [day, month, year] = race.date.split('/');
-      const [hours, minutes] = race.time.split(':');
-      const eventDateTime = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
-      
-      // Se o evento começa depois de agora, ainda não chegamos ao evento atual
-      if (eventDateTime > now) {
-        break;
+  <div class="container mx-auto p-6">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md p-4 rounded-lg mb-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-800">Programação das Corridas</h1>
+
+      <div class="flex gap-4">
+        <select id="filterDay" class="bg-gray-100 border border-gray-300 rounded-md px-2 py-1">
+          <option value="all">Todos os Dias</option>
+          <option value="21">quarta-FEIRA</option>
+          <option value="24">SÁBADO</option>
+          <option value="25">DOMINGO</option>
+        </select>
+
+        <select id="filterCategory" class="bg-gray-100 border border-gray-300 rounded-md px-2 py-1">
+          <option value="all">Todas as Categorias</option>
+          <option value="F1">F1</option>
+          <option value="F3">F3</option>
+          <option value="STOCKCAR">STOCKCAR</option>
+          <option value="INDY500">INDY500</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Event List -->
+    <main id="schedule" class="space-y-6"></main>
+
+  </div>
+
+  <script>
+    const mockSchedule = [
+      {
+        date: "23",
+        day: "SEXTA-FEIRA",
+        events: [
+          { time: "06:05 - 06:45", category: "F3", type: "Classificação", channel: "BAND Sports", location: "Mônaco" },
+          { time: "08:30 - 09:30", category: "F1", type: "Treino 1", channel: "BAND Sports", location: "Mônaco" },
+          { time: "12:00 - 13:00", category: "F1", type: "Treino 2", channel: "BAND Sports", location: "Mônaco" },
+        ],
+      },
+      {
+        date: "24",
+        day: "SÁBADO",
+        events: [
+          { time: "05:45", category: "F3", type: "Corrida Sprint", channel: "BAND Sports", location: "Mônaco" },
+          { time: "07:30 - 08:30", category: "F1", type: "Treino 3", channel: "BAND Sports", location: "Mônaco" },
+          { time: "08:30 - 09:20", category: "STOCKCAR", type: "Classificação", channel: "sportv", location: "Cascavel" },
+          { time: "11:00 - 12:00", category: "F1", type: "Classificação", channel: "BAND Sports", location: "Mônaco" },
+          { time: "15:10 - 16:00", category: "F3", type: "Corrida Sprint", channel: "sportv", location: "Mônaco" },
+        ],
+      },
+      {
+        date: "25",
+        day: "DOMINGO",
+        events: [
+          { time: "03:00", category: "F3", type: "Corrida Principal", channel: "BAND Sports", location: "Mônaco" },
+          { time: "10:00 - 11:00", category: "F1", type: "GP de Monaco", channel: "BAND Sports", location: "Mônaco" },
+          { time: "12:00", category: "INDY500", type: "500 Milhas de Indianápolis", channel: "ESPN", location: "Indianápolis" },
+          { time: "14:10", category: "STOCKCAR", type: "Corrida Principal", channel: "BAND Sports", location: "Cascavel" },
+        ],
+      },
+    ];
+
+    function parseTime(eventTime, baseDate) {
+      const [startStr, endStr] = eventTime.split(" - ");
+      const start = new Date(baseDate);
+      const [startHours, startMinutes] = startStr.split(":").map(Number);
+      start.setHours(startHours, startMinutes, 0, 0);
+
+      let end = null;
+      if (endStr) {
+        end = new Date(baseDate);
+        const [endHours, endMinutes] = endStr.split(":").map(Number);
+        end.setHours(endHours, endMinutes, 0, 0);
+      } else {
+        // Se não houver horário de término, considere o evento com duração de 1 hora
+        end = new Date(start);
+        end.setHours(start.getHours() + 1);
       }
-      
-      // Se há um próximo evento
-      if (i < filteredRaces.length - 1) {
-        const nextRace = filteredRaces[i + 1];
-        const [nDay, nMonth, nYear] = nextRace.date.split('/');
-        const [nHours, nMinutes] = nextRace.time.split(':');
-        const nextDateTime = new Date(parseInt(nYear), parseInt(nMonth) - 1, parseInt(nDay), parseInt(nHours), parseInt(nMinutes));
-        
-        // Se o próximo evento já começou, este evento já terminou
-        if (nextDateTime <= now) {
-          continue;
-        }
-      }
-      
-      // Se chegamos aqui, este é o evento atual
-      currentEventIndex = i;
-      break;
+
+      return { start, end };
     }
-    
-    // Criar as linhas da tabela
-    filteredRaces.forEach((race, i) => {
-      const tr = document.createElement("tr");
+
+    function render() {
+      const selectedDay = document.getElementById("filterDay").value;
+      const selectedCategory = document.getElementById("filterCategory").value;
+
+      const now = new Date();
       
-      // Aplicar classe de cor por dia
-      switch(race.day) {
-        case "Sexta-feira": tr.className = "day-friday"; break;
-        case "Sábado": tr.className = "day-saturday"; break;
-        case "Domingo": tr.className = "day-sunday"; break;
-      }
-      
-      // Marca como evento passado se for anterior ao evento atual
-      if (i < currentEventIndex || (currentEventIndex === -1 && i < filteredRaces.length - 1)) {
-        tr.classList.add("past-event");
-      } 
-      // Marca como evento atual
-      else if (i === currentEventIndex) {
-        tr.classList.add("current-event");
-      }
-      
-      // Preencher conteúdo da linha
-      tr.innerHTML = `
-        <td>${race.day}</td>
-        <td>${race.date}</td>
-        <td><span class="category-badge">${race.category}</span></td>
-        <td>${race.event}</td>
-        <td><span class="time-badge">${race.time}</span></td>
-        <td>${race.location}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-  
-  // Inicializar a tabela
-  document.addEventListener("DOMContentLoaded", () => {
-    createRaceRows();
-    
-    // Atualizar quando o filtro mudar
-    document.getElementById("categoryFilter").addEventListener("change", (e) => {
-      createRaceRows(e.target.value);
-    });
-    
-    // Atualizar a cada minuto para manter o evento atual correto
-    setInterval(() => {
-      createRaceRows(document.getElementById("categoryFilter").value);
-    }, 60000);
-  });
-</script>
+      // Definir o mês e ano para maio de 2025 (para corresponder à data mencionada 21/05/2025)
+      const targetYear = 2025;
+      const targetMonth = 4; // maio = 4 (0-indexed)
+
+      const filteredDays = mockSchedule.filter(day => selectedDay === "all" || day.date === selectedDay);
+
+      const container = document.getElementById("schedule");
+      container.innerHTML = "";
+
+      filteredDays.forEach(day => {
+        // Monta a data real com base no dia do evento e no mês/ano específicos
+        const baseDate = new Date(targetYear, targetMonth, parseInt(day.date));
+
+        const dayContainer = document.createElement("div");
+        dayContainer.className = "space-y-4";
+
+        const dayTitle = document.createElement("h2");
+        dayTitle.textContent = `${day.day} (${baseDate.getDate()}/${baseDate.getMonth()+1}/${baseDate.getFullYear()})`;
+        dayTitle.className = "text-xl font-bold text-gray-800";
+
+        dayContainer.appendChild(dayTitle);
+
+        const eventsContainer = document.createElement("div");
+
+        const filteredEvents = day.events
+          .filter(ev => selectedCategory === "all" || ev.category === selectedCategory);
+
+        filteredEvents.forEach(event => {
+          const { start, end } = parseTime(event.time, baseDate);
+
+          // Determinar o estado do evento (futuro, ativo ou passado)
+          const isFuture = now < start;
+          const isActive = !isFuture && now <= end;
+          const isPast = !isFuture && now > end;
+
+          // Status do evento para debug
+          const statusText = isFuture ? "Futuro" : isActive ? "Acontecendo agora" : "Finalizado";
+
+          const eventCard = document.createElement("div");
+          eventCard.className = `
+            bg-white rounded-lg shadow-md p-4 mb-4 flex items-center justify-between
+            ${isActive ? "animate-pulse" : ""}
+            ${isPast ? "opacity-70" : ""}
+            ${isFuture ? "border-l-4 border-blue-500" : ""}
+          `;
+
+          eventCard.innerHTML = `
+            <div class="w-1/6 text-center">${event.time}</div>
+            <div class="w-1/6 text-center text-red-500 font-bold">${event.category}</div>
+            <div class="w-2/6">${event.type}</div>
+            <div class="w-1/6 text-center text-gray-600">${event.channel}</div>
+            <div class="w-1/6 text-center italic text-gray-600">${event.location}</div>
+            <div class="w-1/6 text-xs text-gray-500">${statusText}</div>
+          `;
+
+          eventsContainer.appendChild(eventCard);
+        });
+
+        if (!filteredEvents.length) {
+          const emptyMsg = document.createElement("p");
+          emptyMsg.textContent = "Nenhum evento encontrado.";
+          emptyMsg.className = "text-gray-600 italic";
+          eventsContainer.appendChild(emptyMsg);
+        }
+
+        dayContainer.appendChild(eventsContainer);
+        container.appendChild(dayContainer);
+      });
+    }
+
+    document.getElementById("filterDay").addEventListener("change", render);
+    document.getElementById("filterCategory").addEventListener("change", render);
+
+    // Atualiza a cada 1 minuto conforme solicitado
+    setInterval(render, 60000);
+    render();
+  </script>
+
 </body>
 </html>
